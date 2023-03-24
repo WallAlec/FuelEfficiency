@@ -1,0 +1,47 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset from the UCI Machine Learning Repository
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data"
+column_names = ["MPG", "Cylinders", "Displacement", "Horsepower", "Weight", "Acceleration", "Model Year", "Origin"]
+dataset = pd.read_csv(url, delim_whitespace=True, names=column_names, na_values='?')
+
+# Data preprocessing
+dataset.dropna(inplace=True)
+dataset['Origin'] = dataset['Origin'].map({1: 'USA', 2: 'Europe', 3: 'Japan'})
+dataset = pd.get_dummies(dataset, prefix='', prefix_sep='', columns=['Origin'])
+
+# Select features and target
+features = ["Cylinders", "Displacement", "Horsepower", "Weight", "Acceleration", "Model Year", "USA", "Europe", "Japan"]
+target = ["MPG"]
+
+X = dataset[features]
+y = dataset[target]
+
+# Split the dataset into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Make predictions using the test set
+y_pred = regressor.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"Root Mean Squared Error: {rmse:.2f}")
+
+# Plot actual vs predicted MPG
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual MPG")
+plt.ylabel("Predicted MPG")
+plt.title("Actual MPG vs Predicted MPG")
+plt.show()
