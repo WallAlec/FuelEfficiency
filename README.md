@@ -1,4 +1,4 @@
-# FuelEfficiency
+# Fuel Efficiency
 This is a small data science project using Python that analyzes a dataset containing information about automobile fuel efficiency, 
 specifically miles per gallon (MPG). I sourced this from the UCI Machine Learning Repository.
 
